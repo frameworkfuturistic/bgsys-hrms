@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +14,25 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+/**
+ * |------------------------------------------------------------------------
+ * | Un Authenticated Routes Defined Here
+ * | -----------------------------------------------------------------------
+ */
+Route::controller(AuthController::class)->group(function () {
+    Route::post('auth/v1/register', 'register');                // User Registration
+    Route::post('auth/v1/login', 'login');                      // User Login
+});
+
+/**
+ * |------------------------------------------------------------------------
+ * | Authenticated Routes Defined Here
+ * | -----------------------------------------------------------------------
+ */
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::controller(AuthController::class)->group(function () {
+        Route::post('auth/v1/logout', 'logout');                      // User Logout
+        Route::post('auth/v1/change-password', 'changePassword');      // User Change Password
+    });
 });
